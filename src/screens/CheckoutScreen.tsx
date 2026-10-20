@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ASSETS } from '../assets/manifest'
-import { Dialog, FooterNote, IconButton, ImgButton } from '../components/ui'
+import { Brand, Dialog, FooterNote, IconButton, ImgButton } from '../components/ui'
 import { box, fmt, won } from '../lib/format'
 import { couponDiscount, type Reward } from '../lib/rewards'
 import { PRODUCT } from '../lib/product'
@@ -27,20 +27,17 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
     <section className="screen checkout" aria-label="쿠폰 적용 및 상품 선택">
       <IconButton kind="back" label="결과 화면으로" x={30} y={18} size={64} onClick={onBack} />
       <IconButton kind="home" label="홈으로" x={616} y={18} size={64} onClick={onHome} />
-      {/* Figma: 로고·타이틀 제거, 큰 구름 말풍선 (24,112,653x261 영역) */}
-      <h1 className="co-bubble display" style={box(122, 148, 466, 184)}>
+      <Brand logo={{ x: 188, y: -4, w: 335 }} title={{ x: 152, y: 104, w: 408 }} />
+
+      <div className="co-bubble" style={box(148, 288, 415, 124)}>
         <span className="co-bubble__l1">획득한 쿠폰으로</span>
         <span className="co-bubble__l2">더 달콤하게 즐겨보세요!</span>
-      </h1>
-      <div className="co-bubble__deco" aria-hidden="true">
-        <Heart x={66} y={140} s={72} rotate={-14} />
-        <Sprinkle x={48} y={228} w={56} color="#3f86f2" rotate={32} />
-        <Sprinkle x={598} y={168} w={52} color="#3f86f2" rotate={-38} />
-        <Sprinkle x={604} y={226} w={54} color="#ff4fa3" rotate={-22} />
+        <Heart x={-14} y={8} s={48} />
+        <Heart x={382} y={44} s={38} />
       </div>
 
       {/* 상품 카드 (선택됨) */}
-      <div className="co-card glass-card co-product" style={box(24, 380, 663, 404)} role="group" aria-labelledby="product-name" data-selected="true">
+      <div className="co-card glass-card co-product" style={box(24, 430, 663, 404)} role="group" aria-labelledby="product-name" data-selected="true">
         <img className="co-product__img" src={ASSETS.illustrations.cupSundae} alt="사랑에 빠진 딸기 아이스크림 컵" style={box(22, -50, 322)} />
         <h2 id="product-name" className="co-product__name display" style={box(372, 40, 280)}>
           {PRODUCT.name}
@@ -87,7 +84,7 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
       </div>
 
       {/* 쿠폰 적용 상태 */}
-      <div className="co-card glass-card co-coupon" style={box(24, 805, 663, 168)}>
+      <div className="co-card glass-card co-coupon" style={box(24, 848, 663, 168)}>
         <div className="co-ticket" style={box(18, 22, 318, 122)} data-empty={!coupon}>
           <img src={ASSETS.panels.ticket} alt="" className="co-ticket__bg" />
           <span className="co-ticket__text display">
@@ -130,7 +127,7 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
       </div>
 
       {/* 금액 */}
-      <div className="co-card glass-card co-sum" style={box(24, 994, 663, 212)}>
+      <div className="co-card glass-card co-sum" style={box(24, 1028, 663, 212)}>
         <dl>
           <div className="co-sum__row" style={box(46, 18, 572)}>
             <dt>상품가</dt>
@@ -161,7 +158,7 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
         textSrc={ASSETS.buttons.textCheckout}
         textWidth={40}
         x={58}
-        y={1257}
+        y={1262}
         w={596}
         h={120}
         onClick={() => setModal('confirm')}
@@ -219,19 +216,10 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
   )
 }
 
-function Heart({ x, y, s, rotate = 0 }: { x: number; y: number; s: number; rotate?: number }) {
+function Heart({ x, y, s }: { x: number; y: number; s: number }) {
   return (
-    <svg style={{ ...box(x, y, s, s), rotate: `${rotate}deg` }} viewBox="0 0 24 24" aria-hidden="true" className="co-heart">
+    <svg style={box(x, y, s, s)} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11Z" fill="#ff5aa9" stroke="#fff" strokeWidth="1.6" />
     </svg>
-  )
-}
-
-function Sprinkle({ x, y, w, color, rotate }: { x: number; y: number; w: number; color: string; rotate: number }) {
-  return (
-    <span
-      className="co-sprinkle"
-      style={{ ...box(x, y, w, w * 0.4), background: `linear-gradient(180deg, color-mix(in srgb, ${color} 60%, #fff), ${color})`, rotate: `${rotate}deg` }}
-    />
   )
 }
