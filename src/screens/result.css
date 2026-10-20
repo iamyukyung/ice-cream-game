@@ -184,7 +184,8 @@
 }
 .share-btn__talk {
   position: relative;
-  margin-left: calc(var(--u) * 46);
+  flex: none;
+  margin-left: calc(var(--u) * 30);
   width: calc(var(--u) * 104);
   height: calc(var(--u) * 74);
   border-radius: 50%;
@@ -207,6 +208,7 @@
 .share-btn__text {
   position: relative;
   flex: 1;
+  margin-right: calc(var(--u) * 110);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -231,11 +233,35 @@
 }
 .share-btn__deco {
   position: absolute;
-  right: calc(var(--u) * 20);
-  top: calc(var(--u) * -40);
-  width: calc(var(--u) * 92);
+  right: calc(var(--u) * 14);
+  top: calc(var(--u) * -18);
+  width: calc(var(--u) * 112);
+  height: calc(var(--u) * 112);
+}
+.share-btn__deco img {
+  width: 100%;
   height: auto;
-  rotate: 12deg;
+  rotate: 8deg;
+}
+.share-btn__heart {
+  position: absolute;
+  left: calc(var(--u) * -10);
+  top: calc(var(--u) * -14);
+  width: calc(var(--u) * 40);
+  height: calc(var(--u) * 40);
+  rotate: -14deg;
+}
+.share-btn__star {
+  position: absolute;
+  left: calc(var(--u) * -34);
+  top: calc(var(--u) * 26);
+  width: calc(var(--u) * 24);
+  height: calc(var(--u) * 24);
+}
+.share-btn__spark {
+  width: calc(var(--u) * 22);
+  height: calc(var(--u) * 22);
+  vertical-align: middle;
 }
 .share-btn:active:not(:disabled) {
   transform: scale(0.97);
@@ -298,4 +324,95 @@
 }
 .sub-btn:active {
   transform: scale(0.96);
+}
+
+/* ---------- Figma '03 결과' 카드 ---------- */
+.result-card {
+  border-width: calc(var(--u) * 5);
+  border-color: #ffc6e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 24);
+  padding-top: calc(var(--u) * 12);
+}
+.result-card__label {
+  position: absolute;
+  top: calc(var(--u) * -30);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: calc(var(--u) * 8) calc(var(--u) * 46);
+  font-weight: 800;
+  font-size: calc(var(--u) * 27);
+  line-height: 1.25;
+  white-space: nowrap;
+  filter: drop-shadow(0 calc(var(--u) * 4) calc(var(--u) * 5) rgba(247, 36, 134, 0.3));
+}
+.result-ticket {
+  position: relative;
+  width: calc(var(--u) * 318);
+  height: calc(var(--u) * 122);
+  display: grid;
+  place-items: center;
+}
+.result-ticket img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.result-ticket__text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--pink);
+  font-size: calc(var(--u) * 28);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.result-ticket__text b {
+  font-weight: 400;
+  font-size: calc(var(--u) * 42);
+}
+.result-ticket[data-empty='true'] img {
+  filter: grayscale(0.85) brightness(1.08) opacity(0.9);
+}
+.result-ticket[data-empty='true'] .result-ticket__text {
+  color: #8f8099;
+}
+.result-card__caption {
+  margin: 0;
+  color: var(--blue);
+  font-size: calc(var(--u) * 28);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.result-card__note {
+  position: absolute;
+  bottom: calc(var(--u) * 10);
+  margin: 0;
+  color: #6f6680;
+  font-weight: 700;
+  font-size: calc(var(--u) * 17);
+}
+.result-score {
+  padding-top: calc(var(--u) * 30);
+}
+.result-score__value {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 4);
+  white-space: nowrap;
+}
+.result-score__value b {
+  color: var(--pink);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.result-score__value span {
+  color: var(--blue);
+  font-size: calc(var(--u) * 42);
 }
