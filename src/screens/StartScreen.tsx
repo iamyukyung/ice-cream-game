@@ -29,10 +29,26 @@ export function StartScreen({ onStart, onGift, onSettings }: Props) {
       {/* 머지 연출 일러스트 */}
       <div className="start__hero" aria-hidden="true">
         <img src={I.coneStrawberry} alt="" className="float-a" style={{ ...box(36, 392, 176), rotate: '-14deg' }} />
-        <svg className="start__arrow" style={box(232, 428, 140, 110)} viewBox="0 0 140 110">
-          <path d="M14 46 C 40 6, 98 4, 112 58" fill="none" stroke="#ff4fa3" strokeWidth="20" strokeLinecap="round" />
-          <path d="M88 52 L 136 50 L 112 96 Z" fill="#ff4fa3" strokeLinejoin="round" stroke="#ff4fa3" strokeWidth="8" />
-          <path d="M22 40 C 44 14, 88 12, 104 44" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth="5" strokeLinecap="round" />
+        {/* 젤리 곡선 화살표: 흰 외곽선 → 핑크 그라데이션 몸통 → 광택 하이라이트 */}
+        <svg className="start__arrow" style={box(242, 436, 120, 94)} viewBox="0 0 140 110">
+          <defs>
+            <linearGradient id="startArrowFill" x1="0" y1="10" x2="0" y2="92" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#ffa6d2" />
+              <stop offset="0.5" stopColor="#ff5aa9" />
+              <stop offset="1" stopColor="#ec1c7c" />
+            </linearGradient>
+          </defs>
+          <g strokeLinecap="round" strokeLinejoin="round">
+            {/* 흰 외곽선 */}
+            <path d="M18 66 C 30 24, 80 12, 97 47" fill="none" stroke="#fff" strokeWidth="30" />
+            <path d="M115.3 38.9 L 110 77 L 78.7 55.1 Z" fill="#fff" stroke="#fff" strokeWidth="18" />
+            {/* 핑크 그라데이션 몸통 */}
+            <path d="M18 66 C 30 24, 80 12, 97 47" fill="none" stroke="url(#startArrowFill)" strokeWidth="21" />
+            <path d="M115.3 38.9 L 110 77 L 78.7 55.1 Z" fill="url(#startArrowFill)" stroke="url(#startArrowFill)" strokeWidth="9" />
+            {/* 젤리 광택 */}
+            <path d="M22 54 C 32 30, 66 20, 84 30" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="5" />
+            <path d="M101 46 L 107 44" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
+          </g>
         </svg>
         <img src={I.coneMint} alt="" className="float-b" style={{ ...box(388, 412, 150), rotate: '8deg' }} />
         <img src={I.cupSundae} alt="" className="float-a" style={box(482, 446, 168)} />
