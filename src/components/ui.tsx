@@ -94,13 +94,15 @@ export function FooterNote({ y }: { y?: number }) {
 export function Brand({
   logo,
   title,
+  logoSrc = ASSETS.brand.cloudLogo,
 }: {
   logo: { x: number; y: number; w: number }
   title: { x: number; y: number; w: number }
+  logoSrc?: string
 }) {
   return (
     <>
-      <img src={ASSETS.brand.cloudLogo} alt="" style={box(logo.x, logo.y, logo.w)} />
+      <img src={logoSrc} alt="" style={box(logo.x, logo.y, logo.w)} />
       <h1 style={{ margin: 0 }}>
         <img src={ASSETS.brand.gameTitle} alt="Ice Cream Game" style={box(title.x, title.y, title.w)} />
       </h1>

@@ -19,7 +19,7 @@ export function StartScreen({ onStart, onGift, onSettings }: Props) {
       <IconButton kind="gift" label="리워드 안내" x={550} y={24} onClick={onGift} />
       <IconButton kind="settings" label="설정" x={628} y={24} onClick={onSettings} />
 
-      <Brand logo={{ x: 178, y: -4, w: 355 }} title={{ x: 88, y: 116, w: 535 }} />
+      <Brand logo={{ x: 178, y: -4, w: 355 }} title={{ x: 88, y: 116, w: 535 }} logoSrc={ASSETS.brand.cloudLogoClean} />
 
       <p className="start__lead" style={box(0, 346, 711)}>
         <span className="start__lead1">같은 아이스크림을 합쳐</span>

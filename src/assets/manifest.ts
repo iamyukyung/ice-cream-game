@@ -15,6 +15,8 @@ export const ASSETS = {
   },
   brand: {
     cloudLogo: a('brand/br_cloud_logo.webp'),
+    /** 구름 하단 'baskin robbins' 글자를 지운 버전 (시작 화면, Figma 반영) */
+    cloudLogoClean: a('brand/br_cloud_logo_clean.webp'),
     gameTitle: a('brand/game_title.webp'),
     resultTitle: a('brand/result_title.webp'),
   },
