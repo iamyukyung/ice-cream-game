@@ -47,23 +47,38 @@ const CUP_SUNDAE: ShapePart[] = [
   { kind: 'poly', pts: [[0.03, 0.6], [0.97, 0.6], [0.88, 0.995], [0.12, 0.995]] },
 ]
 
+const SCOOP_COOKIES: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.53, rx: 0.48, ry: 0.45 }]
+const SCOOP_BLUE: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.53, rx: 0.48, ry: 0.45 }]
+const SCOOP_PISTACHIO: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.52, rx: 0.48, ry: 0.46 }]
+const CONE_MANGO: ShapePart[] = [
+  { kind: 'ellipse', cx: 0.5, cy: 0.33, rx: 0.48, ry: 0.32 },
+  { kind: 'poly', pts: [[0.24, 0.6], [0.76, 0.6], [0.5, 0.995]] },
+]
+
+const S = ASSETS.scoops
+const I = ASSETS.illustrations
 export const LEVELS: readonly ScoopLevel[] = [
-  { level: 0, name: '딸기 스쿱', family: 'scoop', src: ASSETS.scoops.strawberry, width: 104, aspect: 502 / 512, shape: SCOOP_STRAWBERRY, mergeScore: 0 },
-  { level: 1, name: '초코 스쿱', family: 'scoop', src: ASSETS.scoops.chocolate, width: 126, aspect: 453 / 512, shape: SCOOP_CHOCOLATE, mergeScore: 5 },
-  { level: 2, name: '딸기 콘', family: 'cone', src: ASSETS.illustrations.coneStrawberry, width: 150, aspect: 895 / 700, shape: CONE_STRAWBERRY, mergeScore: 15 },
-  { level: 3, name: '민트 콘', family: 'cone', src: ASSETS.illustrations.coneMint, width: 176, aspect: 871 / 700, shape: CONE_MINT, mergeScore: 40 },
-  { level: 4, name: 'BR 컵', family: 'cup', src: ASSETS.illustrations.cupRainbow, width: 226, aspect: 929 / 700, shape: CUP_RAINBOW, mergeScore: 100 },
-  { level: 5, name: '선데 컵', family: 'cup', src: ASSETS.illustrations.cupSundae, width: 258, aspect: 1003 / 700, shape: CUP_SUNDAE, mergeScore: 220 },
+  { level: 0, name: '딸기 스쿱', family: 'scoop', src: S.strawberry, width: 120, aspect: 502 / 512, shape: SCOOP_STRAWBERRY, mergeScore: 0 },
+  { level: 1, name: '초코 스쿱', family: 'scoop', src: S.chocolate, width: 133, aspect: 453 / 512, shape: SCOOP_CHOCOLATE, mergeScore: 8 },
+  { level: 2, name: '쿠키앤크림 스쿱', family: 'scoop', src: S.cookiesCream, width: 146, aspect: 446 / 512, shape: SCOOP_COOKIES, mergeScore: 15 },
+  { level: 3, name: '블루 스쿱', family: 'scoop', src: S.blue, width: 161, aspect: 453 / 512, shape: SCOOP_BLUE, mergeScore: 25 },
+  { level: 4, name: '피스타치오 스쿱', family: 'scoop', src: S.pistachio, width: 178, aspect: 443 / 512, shape: SCOOP_PISTACHIO, mergeScore: 40 },
+  { level: 5, name: '딸기 콘', family: 'cone', src: I.coneStrawberry, width: 186, aspect: 895 / 700, shape: CONE_STRAWBERRY, mergeScore: 70 },
+  { level: 6, name: '민트 콘', family: 'cone', src: I.coneMint, width: 204, aspect: 871 / 700, shape: CONE_MINT, mergeScore: 110 },
+  { level: 7, name: '망고 콘', family: 'cone', src: I.coneMango, width: 222, aspect: 919 / 700, shape: CONE_MANGO, mergeScore: 170 },
+  { level: 8, name: 'BR 컵', family: 'cup', src: I.cupRainbow, width: 246, aspect: 929 / 700, shape: CUP_RAINBOW, mergeScore: 270 },
+  { level: 9, name: '선데 컵', family: 'cup', src: I.cupSundae, width: 270, aspect: 1003 / 700, shape: CUP_SUNDAE, mergeScore: 440 },
 ]
 
 export const MAX_LEVEL = LEVELS.length - 1
 /** 최고 단계(선데 컵)는 더 이상 합쳐지지 않고 통에 남음 → 통이 차면 게임 종료 */
 export const MAX_LEVEL_MERGES = false
 
-/** 드롭되는 건 스쿱 2종만 */
+/** 드롭되는 건 작은 스쿱 3종만 */
 export const SPAWN_WEIGHTS: readonly [level: number, weight: number][] = [
-  [0, 62],
-  [1, 38],
+  [0, 45],
+  [1, 33],
+  [2, 22],
 ]
 
 export function randomSpawnLevel(rand: () => number = Math.random): number {
