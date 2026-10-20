@@ -38,8 +38,8 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
     <section className="screen result" aria-label="게임 결과">
       {/* Figma '03 결과' 기준 배치 (711 아트보드 좌표) */}
       <div className="result__deco" aria-hidden="true">
-        <img src={ASSETS.scoops.chocolate} alt="" className="bob bob--late" style={box(-6, 666, 178)} />
-        <img src={ASSETS.scoops.strawberry} alt="" className="bob" style={box(560, 710, 158)} />
+        <img src={ASSETS.scoops.chocolate} alt="" className="bob bob--late" style={box(-6, 636, 178)} />
+        <img src={ASSETS.scoops.strawberry} alt="" className="bob" style={box(560, 680, 158)} />
       </div>
 
       <h1 className="result__title" style={box(117, 123, 468)}>
@@ -136,8 +136,8 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
 
       {/* 카드 뒤로 살짝 걸치는 콘 일러스트 */}
       <div className="result__deco" aria-hidden="true">
-        <img src={ASSETS.illustrations.coneMint} alt="" className="bob" style={{ ...box(10, 442, 190), rotate: '-8deg' }} />
-        <img src={ASSETS.illustrations.coneStrawberry} alt="" className="bob bob--late" style={{ ...box(561, 426, 180), rotate: '10deg' }} />
+        <img src={ASSETS.illustrations.coneMint} alt="" className="bob" style={{ ...box(10, 412, 190), rotate: '-8deg' }} />
+        <img src={ASSETS.illustrations.coneStrawberry} alt="" className="bob bob--late" style={{ ...box(561, 396, 180), rotate: '10deg' }} />
       </div>
 
       <div className="result-card glass-card" style={box(86, 634, 550, 278)} data-testid={reward ? 'coupon' : 'coupon-empty'}>
