@@ -1,8 +1,8 @@
 import Matter from 'matter-js'
 import { GEO, type Geometry } from './geometry'
-import { LEVELS, MAX_LEVEL, MAX_MERGE_BONUS, levelFit, levelSrc, randomSpawnLevel } from './levels'
+import { LEVELS, MAX_LEVEL, MAX_LEVEL_MERGES, levelHalfWidth, levelHeight, randomSpawnLevel, type ScoopLevel } from './levels'
 
-const { Engine, Bodies, Body, Composite, Events } = Matter
+const { Engine, Bodies, Body, Composite, Events, Vertices } = Matter
 
 /** 물리 고정 스텝 (120Hz) — 프레임 드랍에도 일정한 시뮬레이션 */
 const STEP_MS = 1000 / 120
@@ -13,8 +13,10 @@ const DROP_COOLDOWN_MS = 480
 const DANGER_GRACE_MS = 1300
 /** 위험선 위에 이 시간 이상 머물면 종료 */
 export const GAME_OVER_MS = 2600
+const GROW_FROM = 0.72
 const GROW_STEPS = 9
 const WALL = 400
+const ELLIPSE_SEGMENTS = 18
 
 export interface GameCallbacks {
   onScore?: (score: number, gained: number) => void
@@ -29,7 +31,11 @@ interface ScoopPlugin {
   level: number
   bornAt: number
   merging: boolean
-  targetR: number
+  /** 현재 크기 배율 (성장 애니메이션) */
+  s: number
+  /** 이미지 중심 - 질량중심 (각도 0, 배율 1 기준) */
+  ox: number
+  oy: number
 }
 type ScoopBody = Matter.Body & { plugin: ScoopPlugin }
 
@@ -40,6 +46,25 @@ interface Fx {
   r: number
   t: number
   text?: string
+}
+
+/** 비율 좌표 파트 → 월드 좌표 볼록 꼭짓점 목록 (이미지 중심이 cx,cy) */
+function partVertices(l: ScoopLevel, cx: number, cy: number, scale: number) {
+  const w = l.width * scale
+  const h = levelHeight(l) * scale
+  const left = cx - w / 2
+  const top = cy - h / 2
+  return l.shape.map((p) => {
+    if (p.kind === 'ellipse') {
+      const pts: Matter.Vector[] = []
+      for (let i = 0; i < ELLIPSE_SEGMENTS; i++) {
+        const a = (i / ELLIPSE_SEGMENTS) * Math.PI * 2
+        pts.push({ x: left + (p.cx + Math.cos(a) * p.rx) * w, y: top + (p.cy + Math.sin(a) * p.ry) * h })
+      }
+      return pts
+    }
+    return p.pts.map(([x, y]) => ({ x: left + x * w, y: top + y * h }))
+  })
 }
 
 export class MergeGame {
@@ -68,6 +93,8 @@ export class MergeGame {
   score = 0
   state: 'playing' | 'over' = 'playing'
   paused = false
+  /** E2E용: false면 병합하지 않음 */
+  mergeEnabled = true
   rand: () => number
 
   constructor(canvas: HTMLCanvasElement, cb: GameCallbacks = {}, rand: () => number = Math.random) {
@@ -89,7 +116,7 @@ export class MergeGame {
     Events.on(this.engine, 'collisionStart', this.onCollide)
     Events.on(this.engine, 'collisionActive', this.onCollide)
 
-    for (const l of LEVELS) this.loadImage(levelSrc(l))
+    for (const l of LEVELS) this.loadImage(l.src)
 
     this.current = randomSpawnLevel(this.rand)
     this.next = randomSpawnLevel(this.rand)
@@ -134,8 +161,8 @@ export class MergeGame {
 
   // ---------- public API ----------
   setAim(x: number) {
-    const r = LEVELS[this.current].radius
-    this.aimX = Math.max(this.geo.left + r + 1, Math.min(this.geo.right - r - 1, x))
+    const hw = levelHalfWidth(LEVELS[this.current])
+    this.aimX = Math.max(this.geo.left + hw + 1, Math.min(this.geo.right - hw - 1, x))
   }
   nudgeAim(dx: number) {
     this.setAim(this.aimX + dx)
@@ -161,14 +188,12 @@ export class MergeGame {
   changeCurrent() {
     if (this.state !== 'playing') return
     this.current = this.next
-    let n = randomSpawnLevel(this.rand)
-    if (n === this.current) n = randomSpawnLevel(this.rand)
-    this.next = n
+    this.next = randomSpawnLevel(this.rand)
     this.setAim(this.aimX)
     this.cb.onQueue?.(this.current, this.next)
   }
 
-  /** 스페셜 아이템: 통 안의 가장 작은 두 단계 스쿱을 모두 터뜨림 */
+  /** 스페셜 아이템: 통 안의 가장 작은 두 단계를 모두 터뜨림 */
   bomb(): number {
     if (this.state !== 'playing') return 0
     const scoops = this.scoops()
@@ -177,7 +202,7 @@ export class MergeGame {
     let n = 0
     for (const b of scoops) {
       if (levels.includes(b.plugin.level)) {
-        this.fx.push({ kind: 'pop', x: b.position.x, y: b.position.y, r: b.circleRadius ?? 20, t: 0 })
+        this.fx.push({ kind: 'pop', x: b.position.x, y: b.position.y, r: LEVELS[b.plugin.level].width / 2, t: 0 })
         Composite.remove(this.engine.world, b)
         n++
       }
@@ -203,6 +228,19 @@ export class MergeGame {
     return Composite.allBodies(this.engine.world).filter((b) => b.label === 'scoop') as ScoopBody[]
   }
 
+  /** E2E/디버그: 바디 요약 */
+  snapshot() {
+    return this.scoops().map((b) => ({
+      level: b.plugin.level,
+      x: b.position.x,
+      y: b.position.y,
+      minX: b.bounds.min.x,
+      maxX: b.bounds.max.x,
+      minY: b.bounds.min.y,
+      maxY: b.bounds.max.y,
+    }))
+  }
+
   // ---------- debug hooks (E2E 전용) ----------
   debugSpawn(level: number, x: number, y = this.geo.spawnY) {
     this.spawn(Math.min(MAX_LEVEL, Math.max(0, level)), x, y, false)
@@ -217,31 +255,46 @@ export class MergeGame {
   // ---------- simulation ----------
   private spawn(level: number, x: number, y: number, grow: boolean): ScoopBody {
     const def = LEVELS[level]
-    const r0 = grow ? def.radius * 0.72 : def.radius
-    const b = Bodies.circle(x, y, r0, {
-      label: 'scoop',
+    const s = grow ? GROW_FROM : 1
+    const opts = {
       restitution: 0.12,
-      friction: 0.08,
-      frictionStatic: 0.4,
+      friction: 0.12,
+      frictionStatic: 0.5,
       frictionAir: 0.012,
       density: 0.0012,
       slop: 0.02,
-    }) as ScoopBody
-    b.plugin = { level, bornAt: this.simTime, merging: false, targetR: def.radius }
-    Body.setAngle(b, (this.rand() - 0.5) * 0.6)
+    }
+    const parts = partVertices(def, x, y, s).map((verts) => {
+      const c = Vertices.centre(verts)
+      return Bodies.fromVertices(c.x, c.y, [verts], opts)
+    })
+    const b = (parts.length === 1 ? parts[0] : Body.create({ ...opts, parts })) as ScoopBody
+    b.label = 'scoop'
+    b.plugin = {
+      level,
+      bornAt: this.simTime,
+      merging: false,
+      s,
+      ox: (x - b.position.x) / s,
+      oy: (y - b.position.y) / s,
+    }
+    if (def.family === 'scoop') Body.setAngle(b, (this.rand() - 0.5) * 0.6)
     Body.setVelocity(b, { x: 0, y: grow ? -1.2 : 1.5 })
     Composite.add(this.engine.world, b)
     return b
   }
 
   private onCollide = (e: Matter.IEventCollision<Matter.Engine>) => {
+    if (!this.mergeEnabled) return
     for (const pair of e.pairs) {
-      const a = pair.bodyA as ScoopBody
-      const b = pair.bodyB as ScoopBody
-      if (a.label !== 'scoop' || b.label !== 'scoop') continue
+      // 복합 바디(콘·컵)는 파트끼리 충돌하므로 부모로 올라감
+      const a = pair.bodyA.parent as ScoopBody
+      const b = pair.bodyB.parent as ScoopBody
+      if (a === b || a.label !== 'scoop' || b.label !== 'scoop') continue
       // 더블 머지 보호: 이미 병합 예약된 바디는 다른 쌍에 참여하지 않음
       if (a.plugin.merging || b.plugin.merging) continue
       if (a.plugin.level !== b.plugin.level) continue
+      if (a.plugin.level >= MAX_LEVEL && !MAX_LEVEL_MERGES) continue
       a.plugin.merging = true
       b.plugin.merging = true
       this.mergeQueue.push([a, b])
@@ -260,13 +313,7 @@ export class MergeGame {
       const vb = Body.getVelocity(b)
       Composite.remove(this.engine.world, a)
       Composite.remove(this.engine.world, b)
-      const r = LEVELS[level].radius
-      this.fx.push({ kind: 'pop', x, y, r: r * 1.4, t: 0 })
-      if (level >= MAX_LEVEL) {
-        this.addScore(MAX_MERGE_BONUS, x, y)
-        this.cb.onMerge?.(level + 1)
-        continue
-      }
+      this.fx.push({ kind: 'pop', x, y, r: LEVELS[level].width * 0.7, t: 0 })
       const nl = level + 1
       const nb = this.spawn(nl, x, y, true)
       Body.setVelocity(nb, { x: (va.x + vb.x) * 0.25, y: Math.min(0, (va.y + vb.y) * 0.25) - 0.8 })
@@ -287,23 +334,22 @@ export class MergeGame {
     const { left, right, floor } = this.geo
     for (const b of this.scoops()) {
       const p = b.plugin
-      const r = b.circleRadius ?? p.targetR
-      if (r < p.targetR - 0.01) {
-        const nr = Math.min(p.targetR, r + p.targetR * (0.28 / GROW_STEPS))
-        Body.scale(b, nr / r, nr / r)
+      if (p.s < 1) {
+        const ns = Math.min(1, p.s + (1 - GROW_FROM) / GROW_STEPS)
+        Body.scale(b, ns / p.s, ns / p.s)
+        p.s = ns
       }
       const v = Body.getVelocity(b)
       const sp = Math.hypot(v.x, v.y)
       if (sp > MAX_SPEED) Body.setVelocity(b, { x: (v.x / sp) * MAX_SPEED, y: (v.y / sp) * MAX_SPEED })
-      const rr = b.circleRadius ?? r
-      let { x, y } = b.position
-      let fix = false
-      if (x < left + rr - 2) { x = left + rr; fix = true }
-      if (x > right - rr + 2) { x = right - rr; fix = true }
-      if (y > floor - rr + 3) { y = floor - rr; fix = true }
-      if (fix) {
-        Body.setPosition(b, { x, y })
-        Body.setVelocity(b, { x: v.x * -0.2, y: Math.min(0, v.y) })
+      let dx = 0
+      let dy = 0
+      if (b.bounds.min.x < left - 2) dx = left - b.bounds.min.x
+      else if (b.bounds.max.x > right + 2) dx = right - b.bounds.max.x
+      if (b.bounds.max.y > floor + 3) dy = floor - b.bounds.max.y
+      if (dx || dy) {
+        Body.translate(b, { x: dx, y: dy })
+        Body.setVelocity(b, { x: dx ? v.x * -0.2 : v.x, y: dy ? Math.min(0, v.y) : v.y })
       }
     }
   }
@@ -314,8 +360,7 @@ export class MergeGame {
     for (const b of this.scoops()) {
       if (b.plugin.merging) continue
       if (this.simTime - b.plugin.bornAt < DANGER_GRACE_MS) continue
-      const r = b.circleRadius ?? b.plugin.targetR
-      if (b.position.y - r < dangerY) {
+      if (b.bounds.min.y < dangerY) {
         over = true
         break
       }
@@ -363,32 +408,22 @@ export class MergeGame {
   }
 
   // ---------- rendering ----------
-  private drawScoop(level: number, x: number, y: number, r: number, angle: number, alpha = 1) {
+  /** (x,y) = 이미지 중심 기준으로 그리기 */
+  private drawLevel(level: number, x: number, y: number, angle: number, scale: number, alpha = 1) {
     const def = LEVELS[level]
-    const img = this.images.get(levelSrc(def))
+    const img = this.images.get(def.src)
     const ctx = this.ctx
+    const w = def.width * scale
+    const h = levelHeight(def) * scale
     ctx.save()
     ctx.globalAlpha = alpha
     ctx.translate(x, y)
-    if (def.aura) {
-      const g = ctx.createRadialGradient(0, 0, r * 0.7, 0, 0, r * 1.25)
-      g.addColorStop(0, def.aura)
-      g.addColorStop(1, 'rgba(255,255,255,0)')
-      ctx.fillStyle = g
-      ctx.beginPath()
-      ctx.arc(0, 0, r * 1.25, 0, Math.PI * 2)
-      ctx.fill()
-    }
-    ctx.rotate(angle + def.rotation)
-    if (img && img.complete && img.naturalWidth) {
-      const { scale, oy } = levelFit(def)
-      const w = 2 * r * scale
-      const h = w * (img.naturalHeight / img.naturalWidth)
-      ctx.drawImage(img, -w / 2, -h / 2 + oy * 2 * r, w, h)
-    } else {
+    ctx.rotate(angle)
+    if (img && img.complete && img.naturalWidth) ctx.drawImage(img, -w / 2, -h / 2, w, h)
+    else {
       ctx.fillStyle = '#ffc2dc'
       ctx.beginPath()
-      ctx.arc(0, 0, r, 0, Math.PI * 2)
+      ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2)
       ctx.fill()
     }
     ctx.restore()
@@ -405,23 +440,19 @@ export class MergeGame {
     if (this.state === 'playing') {
       const ready = this.canDrop()
       const cur = LEVELS[this.current]
-      const r = cur.radius
       const x = this.aimX
       const y = this.geo.spawnY
       const k = Math.min(1, (this.simTime - this.lastDropAt) / DROP_COOLDOWN_MS)
-      // 점선
       ctx.fillStyle = 'rgba(247,36,134,0.85)'
-      const start = y + Math.max(r, 40) + 14
+      const start = y + Math.max(levelHeight(cur) / 2, 40) + 14
       const end = this.geo.dangerY - 46
       for (let yy = start; yy < end; yy += 17) {
         ctx.beginPath()
         ctx.arc(x, yy, 4.2, 0, Math.PI * 2)
         ctx.fill()
       }
-      // 화살표
       ctx.beginPath()
       ctx.moveTo(x - 20, end + 2)
-      ctx.lineTo(x + 20, end + 2)
       ctx.lineTo(x + 20, end + 2)
       ctx.lineTo(x, end + 24)
       ctx.closePath()
@@ -435,39 +466,44 @@ export class MergeGame {
       ctx.lineTo(x, end + 6)
       ctx.stroke()
       const grow = ready ? 1 : 0.6 + 0.4 * k
-      this.drawScoop(this.current, x, y, r * grow, 0, ready ? 1 : 0.4 + 0.6 * k)
+      this.drawLevel(this.current, x, y, 0, grow, ready ? 1 : 0.4 + 0.6 * k)
     }
 
     for (const b of this.scoops()) {
-      this.drawScoop(b.plugin.level, b.position.x, b.position.y, b.circleRadius ?? b.plugin.targetR, b.angle)
+      const p = b.plugin
+      const c = Math.cos(b.angle)
+      const sn = Math.sin(b.angle)
+      const ox = p.ox * p.s
+      const oy = p.oy * p.s
+      this.drawLevel(p.level, b.position.x + ox * c - oy * sn, b.position.y + ox * sn + oy * c, b.angle, p.s)
     }
 
     // 이펙트
     const sec = dt / 1000
     this.fx = this.fx.filter((f) => (f.t += sec) < 0.6)
     for (const f of this.fx) {
-      const p = f.t / 0.6
+      const q = f.t / 0.6
       if (f.kind === 'pop') {
-        ctx.strokeStyle = `rgba(255,255,255,${0.9 * (1 - p)})`
-        ctx.lineWidth = 6 * (1 - p) + 1
+        ctx.strokeStyle = `rgba(255,255,255,${0.9 * (1 - q)})`
+        ctx.lineWidth = 6 * (1 - q) + 1
         ctx.beginPath()
-        ctx.arc(f.x, f.y, f.r * (0.6 + p * 0.6), 0, Math.PI * 2)
+        ctx.arc(f.x, f.y, f.r * (0.6 + q * 0.6), 0, Math.PI * 2)
         ctx.stroke()
-        ctx.fillStyle = `rgba(255,140,200,${0.6 * (1 - p)})`
+        ctx.fillStyle = `rgba(255,140,200,${0.6 * (1 - q)})`
         for (let i = 0; i < 8; i++) {
           const a = (i / 8) * Math.PI * 2
-          const d = f.r * (0.7 + p * 0.8)
+          const d = f.r * (0.7 + q * 0.8)
           ctx.beginPath()
-          ctx.arc(f.x + Math.cos(a) * d, f.y + Math.sin(a) * d, 5 * (1 - p) + 1, 0, Math.PI * 2)
+          ctx.arc(f.x + Math.cos(a) * d, f.y + Math.sin(a) * d, 5 * (1 - q) + 1, 0, Math.PI * 2)
           ctx.fill()
         }
       } else if (f.text) {
         ctx.font = `34px Jua, "Apple SD Gothic Neo", sans-serif`
         ctx.textAlign = 'center'
         ctx.lineWidth = 7
-        ctx.strokeStyle = `rgba(255,255,255,${1 - p})`
-        ctx.fillStyle = `rgba(247,36,134,${1 - p})`
-        const ty = f.y - 20 - p * 50
+        ctx.strokeStyle = `rgba(255,255,255,${1 - q})`
+        ctx.fillStyle = `rgba(247,36,134,${1 - q})`
+        const ty = f.y - 20 - q * 50
         ctx.strokeText(f.text, f.x, ty)
         ctx.fillText(f.text, f.x, ty)
       }

@@ -253,7 +253,7 @@ export function GameScreen({ onExit, onGameOver, onGift, onSettings, paused }: P
         <div className="next" style={box(553, 30, 138, 160)} aria-hidden="true">
           <span className="next__tag display">NEXT</span>
           <span className="next__bubble">
-            <img src={levelSrc(LEVELS[next])} alt="" style={{ width: fieldPx(40 + LEVELS[next].radius * 1.1) }} />
+            <img src={levelSrc(LEVELS[next])} alt="" style={{ width: fieldPx(LEVELS[next].width * 0.95) }} />
           </span>
         </div>
         <canvas ref={canvasRef} className="field__canvas" />
