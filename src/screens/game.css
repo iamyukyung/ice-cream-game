@@ -8,14 +8,15 @@
   align-items: center;
   justify-content: center;
 }
-.hud__label {
+/* Figma: 현재 점수 · 현재 리워드 · 다음 리워드까지 라벨 크기 통일 (20) */
+.hud__label,
+.hud__next-title {
   font-weight: 800;
-  font-size: calc(var(--u) * 22);
+  font-size: calc(var(--u) * 20);
   letter-spacing: -0.03em;
 }
 .hud__label--pink {
   color: var(--pink);
-  font-size: calc(var(--u) * 20);
 }
 .hud__value {
   font-size: calc(var(--u) * 58);
@@ -106,8 +107,6 @@
 }
 .hud__next-title {
   color: var(--ink);
-  font-weight: 800;
-  font-size: calc(var(--u) * 20);
 }
 .hud__remain {
   color: var(--ink);
