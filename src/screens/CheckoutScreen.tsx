@@ -87,7 +87,6 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
       <div className="co-card glass-card co-coupon" style={box(24, 848, 663, 168)}>
         <div className="co-ticket" style={box(18, 22, 318, 122)} data-empty={!coupon}>
           <img src={ASSETS.panels.ticket} alt="" className="co-ticket__bg" />
-          <img src={ASSETS.brand.cloudLogo} alt="" className="co-ticket__logo" />
           <span className="co-ticket__text display">
             {coupon ? (
               <>
