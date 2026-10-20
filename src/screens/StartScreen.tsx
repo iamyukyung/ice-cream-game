@@ -40,14 +40,14 @@ export function StartScreen({ onStart, onGift, onSettings }: Props) {
           </defs>
           <g strokeLinecap="round" strokeLinejoin="round">
             {/* 흰 외곽선 */}
-            <path d="M18 66 C 30 24, 80 12, 97 47" fill="none" stroke="#fff" strokeWidth="30" />
-            <path d="M115.3 38.9 L 110 77 L 78.7 55.1 Z" fill="#fff" stroke="#fff" strokeWidth="18" />
+            <path d="M14 62 C 26 12, 98 2, 104 58" fill="none" stroke="#fff" strokeWidth="30" />
+            <path d="M122.9 56.3 L 106.5 86 L 85.1 59.7 Z" fill="#fff" stroke="#fff" strokeWidth="18" />
             {/* 핑크 그라데이션 몸통 */}
-            <path d="M18 66 C 30 24, 80 12, 97 47" fill="none" stroke="url(#startArrowFill)" strokeWidth="21" />
-            <path d="M115.3 38.9 L 110 77 L 78.7 55.1 Z" fill="url(#startArrowFill)" stroke="url(#startArrowFill)" strokeWidth="9" />
+            <path d="M14 62 C 26 12, 98 2, 104 58" fill="none" stroke="url(#startArrowFill)" strokeWidth="21" />
+            <path d="M122.9 56.3 L 106.5 86 L 85.1 59.7 Z" fill="url(#startArrowFill)" stroke="url(#startArrowFill)" strokeWidth="9" />
             {/* 젤리 광택 */}
-            <path d="M22 54 C 32 30, 66 20, 84 30" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="5" />
-            <path d="M101 46 L 107 44" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
+            <path d="M20 50 C 30 22, 72 10, 92 22" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="5" />
+            <path d="M106 58 L 113 58" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="4" />
           </g>
         </svg>
         <img src={I.coneMint} alt="" className="float-b" style={{ ...box(388, 412, 150), rotate: '8deg' }} />
