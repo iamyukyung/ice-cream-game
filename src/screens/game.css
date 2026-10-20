@@ -149,7 +149,8 @@
 .field:active {
   cursor: grabbing;
 }
-.field:focus-visible::after {
+/* 키보드로 조작 중일 때만 표시 (터치·마우스 플레이 중 자동 포커스로 테두리가 보이지 않게) */
+html[data-input='keyboard'] .field:focus-visible::after {
   content: '';
   position: absolute;
   inset: calc(var(--u) * 150) calc(var(--u) * 10) 0;
