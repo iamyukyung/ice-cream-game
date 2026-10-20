@@ -24,6 +24,8 @@ export const ASSETS = {
     ribbon: a('panels/banner_ribbon_blank.webp'),
     card: a('panels/card_white_pink_blank.webp'),
     ticket: a('panels/coupon_ticket_blank.webp'),
+    /** 쿠폰 적용 화면 말풍선 (사용자 제작 이미지, Figma 반영) */
+    checkoutBubble: a('panels/checkout_bubble.webp'),
   },
   buttons: {
     circleWhite: a('buttons/btn_circle_white.webp'),

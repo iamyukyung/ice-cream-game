@@ -29,12 +29,10 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
       <IconButton kind="home" label="홈으로" x={616} y={18} size={64} onClick={onHome} />
       <Brand logo={{ x: 188, y: -4, w: 335 }} title={{ x: 152, y: 104, w: 408 }} />
 
-      <div className="co-bubble" style={box(148, 288, 415, 124)}>
-        <span className="co-bubble__l1">획득한 쿠폰으로</span>
-        <span className="co-bubble__l2">더 달콤하게 즐겨보세요!</span>
-        <Heart x={-14} y={8} s={48} />
-        <Heart x={382} y={44} s={38} />
-      </div>
+      {/* Figma: 말풍선 이미지 (142,259 · 427x171) */}
+      <p className="co-bubble-img" style={box(142, 259, 427, 171)}>
+        <img src={ASSETS.panels.checkoutBubble} alt="획득한 쿠폰으로 더 달콤하게 즐겨보세요!" />
+      </p>
 
       {/* 상품 카드 (선택됨) */}
       <div className="co-card glass-card co-product" style={box(24, 430, 663, 404)} role="group" aria-labelledby="product-name" data-selected="true">
@@ -213,13 +211,5 @@ export function CheckoutScreen({ coupon, onBack, onHome }: Props) {
         </div>
       </Dialog>
     </section>
-  )
-}
-
-function Heart({ x, y, s }: { x: number; y: number; s: number }) {
-  return (
-    <svg style={box(x, y, s, s)} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11Z" fill="#ff5aa9" stroke="#fff" strokeWidth="1.6" />
-    </svg>
   )
 }
