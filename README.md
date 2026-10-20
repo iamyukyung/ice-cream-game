@@ -18,6 +18,15 @@ npm run preview    # 빌드 결과 확인 (http://localhost:4173)
 - 네트워크 없이 동작: 이미지(`public/assets`), 폰트(`@fontsource/jua`, 번들 포함), 게임 로직 모두 로컬. API·가입 없음.
 - 휴대폰에서 보기: `npm run dev -- --host` 후 같은 Wi‑Fi에서 표시된 IP로 접속.
 
+## 배포 (Railway)
+
+GitHub 저장소를 Railway에 연결하면 자동으로 설치 → 빌드 → 실행됩니다. 별도 설정 파일은 필요 없습니다.
+
+- 빌드: `npm run build` (Railway가 자동 감지)
+- 실행: `npm start` → `vite preview --host 0.0.0.0 --port $PORT`
+- Node 22 이상 (`package.json`의 `engines`)
+- `vite.config.ts`의 `preview.allowedHosts`로 Railway 도메인 요청을 허용합니다.
+
 ## 검증
 
 ```bash
