@@ -299,3 +299,44 @@
 .sub-btn:active {
   transform: scale(0.96);
 }
+
+/* ---------- 하단 보조 버튼 (이미지) ---------- */
+.pill-btn {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.pill-btn img {
+  /* 이미지 = 알약 + 바깥 글로우. 알약 부분이 버튼 영역에 맞도록 확장 배치 */
+  position: absolute;
+  left: -3.03%;
+  top: -25.57%;
+  width: 112.59%;
+  height: 160%;
+  max-width: none;
+}
+.pill-btn__count {
+  /* 이미지 속 핑크 알약 슬롯 위치 */
+  position: absolute;
+  left: 73.2%;
+  top: 26.2%;
+  width: 19.9%;
+  height: 49.8%;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  color: #fff;
+  font-size: calc(var(--u) * 22);
+  line-height: 1;
+}
+.pill-btn:active {
+  transform: scale(0.96);
+}
+.pill-btn:focus-visible {
+  outline: calc(var(--u) * 5) solid rgba(21, 59, 142, 0.55);
+  outline-offset: calc(var(--u) * 2);
+}

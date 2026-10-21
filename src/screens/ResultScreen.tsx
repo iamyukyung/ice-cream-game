@@ -174,25 +174,17 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
         <img className="share-btn__deco" src={ASSETS.scoops.strawberry} alt="" />
       </button>
 
-      <button type="button" className="sub-btn" style={box(52, 1294, 296, 84)} onClick={onReplay} data-testid="replay-btn">
-        <img src={ASSETS.buttons.secondary} alt="" />
-        <span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 12a8 8 0 1 1-2.6-5.9" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-            <path d="M20.5 3.5v5h-5" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          다시 플레이하기
-          <em data-testid="plays-left">{canPlay ? `${wallet.playsLeft}회` : '0회'}</em>
-        </span>
+      {/* 하단 보조 버튼: 사용자 제작 이미지 (텍스트 포함). 버튼 영역 = 이미지 속 알약 모양 */}
+      <button type="button" className="pill-btn" style={box(52, 1301, 296, 70)} onClick={onReplay} data-testid="replay-btn">
+        <img src={ASSETS.buttons.replayPill} alt="" />
+        <span className="sr-only">다시 플레이하기, 남은 기회</span>
+        <em className="pill-btn__count display" data-testid="plays-left">
+          {canPlay ? `${wallet.playsLeft}회` : '0회'}
+        </em>
       </button>
-      <button type="button" className="sub-btn" style={box(364, 1294, 296, 84)} onClick={onHome}>
-        <img src={ASSETS.buttons.secondary} alt="" />
-        <span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3.5 11 12 4l8.5 7M6 9.5V20h12V9.5M10 20v-5h4v5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          홈으로 가기
-        </span>
+      <button type="button" className="pill-btn" style={box(364, 1301, 296, 70)} onClick={onHome}>
+        <img src={ASSETS.buttons.homePill} alt="" />
+        <span className="sr-only">홈으로 가기</span>
       </button>
       <FooterNote />
     </section>

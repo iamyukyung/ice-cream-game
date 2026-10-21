@@ -32,6 +32,9 @@ export const ASSETS = {
     primary: a('buttons/btn_primary_hot_pink.webp'),
     secondary: a('buttons/btn_secondary_pale_pink.webp'),
     share: a('buttons/btn_share_yellow.webp'),
+    /** 결과 화면 하단 버튼 (사용자 제작 이미지, 글자 포함) */
+    replayPill: a('buttons/btn_replay_pill.webp'),
+    homePill: a('buttons/btn_home_pill.webp'),
     textStart: a('buttons/text_start_game.webp'),
     textDrop: a('buttons/text_drop_icecream.webp'),
     textUseCoupon: a('buttons/text_use_coupon.webp'),
