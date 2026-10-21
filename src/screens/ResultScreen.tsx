@@ -145,7 +145,7 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
       <button
         type="button"
         className="share-img-btn"
-        style={box(34, 1146, 644, 127)}
+        style={box(34, 1135, 644, 181)}
         onClick={share}
         disabled={wallet.shareBonusUsed || sharing}
         aria-disabled={wallet.shareBonusUsed || sharing}
@@ -153,24 +153,18 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
         data-done={wallet.shareBonusUsed}
       >
         <img src={ASSETS.buttons.shareKakao} alt="" />
-        {wallet.shareBonusUsed ? (
-          <span className="share-img-btn__done display">
-            공유 완료 · 남은 기회 {wallet.playsLeft}회
-          </span>
-        ) : (
-          <span className="sr-only">친구에게 카카오톡으로 공유하면 게임 참여 기회 1회 추가</span>
-        )}
+        <span className="sr-only">친구에게 카카오톡으로 공유하면 게임 참여 기회 1회 추가</span>
       </button>
 
       {/* 하단 보조 버튼: 사용자 제작 이미지 (텍스트 포함). 버튼 영역 = 이미지 속 알약 모양 */}
-      <button type="button" className="pill-btn" style={box(52, 1301, 296, 70)} onClick={onReplay} data-testid="replay-btn">
+      <button type="button" className="pill-btn" style={box(34, 1290, 322, 107)} onClick={onReplay} data-testid="replay-btn">
         <img src={ASSETS.buttons.replayPill} alt="" />
         <span className="sr-only">다시 플레이하기, 남은 기회</span>
         <em className="pill-btn__count display" data-testid="plays-left">
           {canPlay ? `${wallet.playsLeft}회` : '0회'}
         </em>
       </button>
-      <button type="button" className="pill-btn" style={box(364, 1301, 296, 70)} onClick={onHome}>
+      <button type="button" className="pill-btn" style={box(355, 1290, 322, 107)} onClick={onHome}>
         <img src={ASSETS.buttons.homePill} alt="" />
         <span className="sr-only">홈으로 가기</span>
       </button>

@@ -300,32 +300,28 @@
   transform: scale(0.96);
 }
 
-/* ---------- 하단 보조 버튼 (이미지) ---------- */
-.pill-btn {
+/* ---------- 하단 버튼 · 공유 버튼: 제공 이미지를 그대로 크기만 맞춰 사용 ---------- */
+.pill-btn,
+.share-img-btn {
   position: absolute;
   padding: 0;
   border: 0;
   background: none;
-  border-radius: 999px;
   cursor: pointer;
   transition: transform 0.12s ease;
 }
-.pill-btn img {
-  /* 이미지 = 알약 + 바깥 글로우. 알약 부분이 버튼 영역에 맞도록 확장 배치 */
-  position: absolute;
-  left: -3.03%;
-  top: -25.57%;
-  width: 112.59%;
-  height: 160%;
-  max-width: none;
+.pill-btn img,
+.share-img-btn img {
+  width: 100%;
+  height: 100%;
 }
 .pill-btn__count {
   /* 이미지 속 핑크 알약 슬롯 위치 */
   position: absolute;
-  left: 73.2%;
-  top: 26.2%;
-  width: 19.9%;
-  height: 49.8%;
+  left: 68.9%;
+  top: 33.6%;
+  width: 16.3%;
+  height: 29%;
   display: grid;
   place-items: center;
   font-style: normal;
@@ -333,57 +329,16 @@
   font-size: calc(var(--u) * 22);
   line-height: 1;
 }
-.pill-btn:active {
-  transform: scale(0.96);
-}
-.pill-btn:focus-visible {
-  outline: calc(var(--u) * 5) solid rgba(21, 59, 142, 0.55);
-  outline-offset: calc(var(--u) * 2);
-}
-
-/* ---------- 카카오톡 공유 버튼 (이미지) ---------- */
-.share-img-btn {
-  position: absolute;
-  padding: 0;
-  border: 0;
-  background: none;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: transform 0.12s ease;
-}
-.share-img-btn img {
-  /* 이미지 = 노란 알약 + 바깥 글로우·장식. 알약이 버튼 영역에 맞도록 확장 */
-  position: absolute;
-  left: -2.55%;
-  top: -25.54%;
-  width: 103.46%;
-  height: 150.15%;
-  max-width: none;
-}
-.share-img-btn[data-done='true'] img {
-  filter: grayscale(0.6) brightness(1.05) opacity(0.75);
-}
-.share-img-btn__done {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(-3deg);
-  padding: calc(var(--u) * 10) calc(var(--u) * 22);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.95);
-  border: calc(var(--u) * 3) solid var(--pink);
-  color: var(--pink);
-  font-size: calc(var(--u) * 28);
-  white-space: nowrap;
-  box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 10) rgba(247, 36, 134, 0.25);
-}
+.pill-btn:active,
 .share-img-btn:active:not(:disabled) {
   transform: scale(0.97);
 }
 .share-img-btn:disabled {
   cursor: default;
 }
+.pill-btn:focus-visible,
 .share-img-btn:focus-visible {
   outline: calc(var(--u) * 5) solid rgba(21, 59, 142, 0.55);
-  outline-offset: calc(var(--u) * 2);
+  outline-offset: calc(var(--u) * -10);
+  border-radius: calc(var(--u) * 60);
 }
