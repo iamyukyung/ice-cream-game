@@ -340,3 +340,50 @@
   outline: calc(var(--u) * 5) solid rgba(21, 59, 142, 0.55);
   outline-offset: calc(var(--u) * 2);
 }
+
+/* ---------- 카카오톡 공유 버튼 (이미지) ---------- */
+.share-img-btn {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.share-img-btn img {
+  /* 이미지 = 노란 알약 + 바깥 글로우·장식. 알약이 버튼 영역에 맞도록 확장 */
+  position: absolute;
+  left: -2.55%;
+  top: -25.54%;
+  width: 103.46%;
+  height: 150.15%;
+  max-width: none;
+}
+.share-img-btn[data-done='true'] img {
+  filter: grayscale(0.6) brightness(1.05) opacity(0.75);
+}
+.share-img-btn__done {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  padding: calc(var(--u) * 10) calc(var(--u) * 22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  border: calc(var(--u) * 3) solid var(--pink);
+  color: var(--pink);
+  font-size: calc(var(--u) * 28);
+  white-space: nowrap;
+  box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 10) rgba(247, 36, 134, 0.25);
+}
+.share-img-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.share-img-btn:disabled {
+  cursor: default;
+}
+.share-img-btn:focus-visible {
+  outline: calc(var(--u) * 5) solid rgba(21, 59, 142, 0.55);
+  outline-offset: calc(var(--u) * 2);
+}

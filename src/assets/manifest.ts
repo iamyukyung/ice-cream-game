@@ -32,6 +32,8 @@ export const ASSETS = {
     primary: a('buttons/btn_primary_hot_pink.webp'),
     secondary: a('buttons/btn_secondary_pale_pink.webp'),
     share: a('buttons/btn_share_yellow.webp'),
+    /** 결과 화면 카카오톡 공유 버튼 (사용자 제작 이미지, 글자 포함) */
+    shareKakao: a('buttons/btn_share_kakao.webp'),
     /** 결과 화면 하단 버튼 (사용자 제작 이미지, 글자 포함) */
     replayPill: a('buttons/btn_replay_pill.webp'),
     homePill: a('buttons/btn_home_pill.webp'),

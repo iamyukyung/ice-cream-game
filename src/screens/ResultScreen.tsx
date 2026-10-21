@@ -144,34 +144,22 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
 
       <button
         type="button"
-        className="share-btn"
-        style={box(34, 1138, 644, 144)}
+        className="share-img-btn"
+        style={box(34, 1146, 644, 127)}
         onClick={share}
         disabled={wallet.shareBonusUsed || sharing}
         aria-disabled={wallet.shareBonusUsed || sharing}
         data-testid="share-btn"
+        data-done={wallet.shareBonusUsed}
       >
-        <img className="share-btn__bg" src={ASSETS.buttons.share} alt="" />
-        <span className="share-btn__talk display" aria-hidden="true">
-          TALK
-        </span>
-        <span className="share-btn__text">
-          {wallet.shareBonusUsed ? (
-            <>
-              <span>공유 보상을 받았어요 (최대 1회)</span>
-              <b className="display">남은 참여 기회 {wallet.playsLeft}회</b>
-            </>
-          ) : (
-            <>
-              <span>친구에게 카카오톡으로 공유하면</span>
-              <b className="display">게임 참여 기회 1회 추가!</b>
-            </>
-          )}
-        </span>
-        <span className="share-btn__chev" aria-hidden="true">
-          ›
-        </span>
-        <img className="share-btn__deco" src={ASSETS.scoops.strawberry} alt="" />
+        <img src={ASSETS.buttons.shareKakao} alt="" />
+        {wallet.shareBonusUsed ? (
+          <span className="share-img-btn__done display">
+            공유 완료 · 남은 기회 {wallet.playsLeft}회
+          </span>
+        ) : (
+          <span className="sr-only">친구에게 카카오톡으로 공유하면 게임 참여 기회 1회 추가</span>
+        )}
       </button>
 
       {/* 하단 보조 버튼: 사용자 제작 이미지 (텍스트 포함). 버튼 영역 = 이미지 속 알약 모양 */}
