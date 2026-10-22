@@ -42,10 +42,10 @@ export function ResultScreen({ score, reward, wallet, onUseCoupon, onShare, onRe
       <img src={ASSETS.brand.gameTitle} alt="Ice Cream Game" style={box(143, 107, 408)} />
 
       <div className="result__deco" aria-hidden="true">
-        <img src={ASSETS.scoops.chocolate} alt="" className="bob bob--late" style={box(-6, 606, 178)} />
-        <img src={ASSETS.scoops.strawberry} alt="" className="bob" style={box(560, 650, 158)} />
-        <img src={ASSETS.illustrations.coneMint} alt="" className="bob" style={{ ...box(10, 352, 190), rotate: '-8deg' }} />
-        <img src={ASSETS.illustrations.coneStrawberry} alt="" className="bob bob--late" style={{ ...box(561, 336, 180), rotate: '10deg' }} />
+        <img src={ASSETS.scoops.chocolate} alt="" className="bob bob--late" style={box(-18, 606, 178)} />
+        <img src={ASSETS.scoops.strawberry} alt="" className="bob" style={box(548, 650, 158)} />
+        <img src={ASSETS.illustrations.coneMint} alt="" className="bob" style={{ ...box(-2, 352, 190), rotate: '-8deg' }} />
+        <img src={ASSETS.illustrations.coneStrawberry} alt="" className="bob bob--late" style={{ ...box(549, 336, 180), rotate: '10deg' }} />
       </div>
 
       <h1 className="result__title" style={box(132, 281, 416)}>
