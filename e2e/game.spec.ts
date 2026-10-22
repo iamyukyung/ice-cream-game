@@ -211,7 +211,7 @@ test('공유 보상은 최대 1회 (연타해도 +1)', async ({ page }, info) =>
   await open(page, info.project.name)
   await startGame(page) // 3 → 2
   await page.evaluate(() => window.__ICG__!.game!.debugGameOver())
-  await expect(page.getByTestId('plays-left')).toHaveText('2회', { timeout: 5000 })
+  await expect(page.getByTestId('plays-left')).toHaveText('(2/3)', { timeout: 5000 })
   const share = page.getByTestId('share-btn')
   // 같은 프레임 안에서 3연타 (비활성화 렌더 전에 들어오는 중복 클릭)
   await share.evaluate((el: HTMLButtonElement) => {
@@ -219,18 +219,18 @@ test('공유 보상은 최대 1회 (연타해도 +1)', async ({ page }, info) =>
     el.click()
     el.click()
   })
-  await expect(page.getByTestId('plays-left')).toHaveText('3회')
+  await expect(page.getByTestId('plays-left')).toHaveText('(3/4)')
   await expect(share).toBeDisabled()
   await share.dispatchEvent('click')
   await share.evaluate((el: HTMLButtonElement) => el.click())
   await page.waitForTimeout(300)
-  await expect(page.getByTestId('plays-left')).toHaveText('3회')
+  await expect(page.getByTestId('plays-left')).toHaveText('(3/4)')
 
   // 다시 플레이 → 결과 → 여전히 공유 불가, 기회 감소만
   await page.getByTestId('replay-btn').click()
   await page.waitForFunction(() => !!window.__ICG__?.game)
   await page.evaluate(() => window.__ICG__!.game!.debugGameOver())
-  await expect(page.getByTestId('plays-left')).toHaveText('2회', { timeout: 5000 })
+  await expect(page.getByTestId('plays-left')).toHaveText('(2/4)', { timeout: 5000 })
   await expect(page.getByTestId('share-btn')).toBeDisabled()
 })
 

@@ -37,6 +37,9 @@ export const ASSETS = {
     /** 결과 화면 하단 버튼 (사용자 제작 이미지, 글자 포함) */
     replayPill: a('buttons/btn_replay_pill.webp'),
     homePill: a('buttons/btn_home_pill.webp'),
+    /** 결과 화면 하단 (Figma 10/22): 원본 시안에서 잘라낸 버튼 */
+    retryBlank: a('buttons/btn_retry_blank.webp'),
+    homeRef: a('buttons/btn_home_ref.webp'),
     textStart: a('buttons/text_start_game.webp'),
     textDrop: a('buttons/text_drop_icecream.webp'),
     textUseCoupon: a('buttons/text_use_coupon.webp'),
