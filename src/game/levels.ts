@@ -38,8 +38,7 @@ const CONE_MINT: ShapePart[] = [
   { kind: 'ellipse', cx: 0.5, cy: 0.36, rx: 0.47, ry: 0.34 },
   { kind: 'poly', pts: [[0.25, 0.6], [0.75, 0.6], [0.5, 0.995]] },
 ]
-/** 현재 미사용 (8단계 개편으로 제외) — 다시 넣을 때 사용 */
-export const CUP_RAINBOW: ShapePart[] = [
+const CUP_RAINBOW: ShapePart[] = [
   { kind: 'ellipse', cx: 0.5, cy: 0.38, rx: 0.47, ry: 0.28 },
   { kind: 'poly', pts: [[0.0, 0.57], [1.0, 0.57], [0.87, 0.995], [0.13, 0.995]] },
 ]
@@ -51,8 +50,7 @@ const CUP_SUNDAE: ShapePart[] = [
 const SCOOP_COOKIES: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.53, rx: 0.48, ry: 0.45 }]
 const SCOOP_BLUE: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.53, rx: 0.48, ry: 0.45 }]
 const SCOOP_PISTACHIO: ShapePart[] = [{ kind: 'ellipse', cx: 0.5, cy: 0.52, rx: 0.48, ry: 0.46 }]
-/** 현재 미사용 (8단계 개편으로 제외) — 다시 넣을 때 사용 */
-export const CONE_MANGO: ShapePart[] = [
+const CONE_MANGO: ShapePart[] = [
   { kind: 'ellipse', cx: 0.5, cy: 0.33, rx: 0.48, ry: 0.32 },
   { kind: 'poly', pts: [[0.24, 0.6], [0.76, 0.6], [0.5, 0.995]] },
 ]
@@ -60,14 +58,16 @@ export const CONE_MANGO: ShapePart[] = [
 const S = ASSETS.scoops
 const I = ASSETS.illustrations
 export const LEVELS: readonly ScoopLevel[] = [
-  { level: 0, name: '딸기 스쿱', family: 'scoop', src: S.strawberry, width: 124, aspect: 502 / 512, shape: SCOOP_STRAWBERRY, mergeScore: 0 },
-  { level: 1, name: '초코 스쿱', family: 'scoop', src: S.chocolate, width: 139, aspect: 453 / 512, shape: SCOOP_CHOCOLATE, mergeScore: 9 },
-  { level: 2, name: '쿠키앤크림 스쿱', family: 'scoop', src: S.cookiesCream, width: 154, aspect: 446 / 512, shape: SCOOP_COOKIES, mergeScore: 17 },
-  { level: 3, name: '블루 스쿱', family: 'scoop', src: S.blue, width: 171, aspect: 453 / 512, shape: SCOOP_BLUE, mergeScore: 30 },
-  { level: 4, name: '피스타치오 스쿱', family: 'scoop', src: S.pistachio, width: 190, aspect: 443 / 512, shape: SCOOP_PISTACHIO, mergeScore: 50 },
-  { level: 5, name: '딸기 콘', family: 'cone', src: I.coneStrawberry, width: 203, aspect: 895 / 700, shape: CONE_STRAWBERRY, mergeScore: 85 },
-  { level: 6, name: '민트 콘', family: 'cone', src: I.coneMint, width: 226, aspect: 871 / 700, shape: CONE_MINT, mergeScore: 140 },
-  { level: 7, name: '선데 컵', family: 'cup', src: I.cupSundae, width: 268, aspect: 1003 / 700, shape: CUP_SUNDAE, mergeScore: 260 },
+  { level: 0, name: '딸기 스쿱', family: 'scoop', src: S.strawberry, width: 120, aspect: 502 / 512, shape: SCOOP_STRAWBERRY, mergeScore: 0 },
+  { level: 1, name: '초코 스쿱', family: 'scoop', src: S.chocolate, width: 133, aspect: 453 / 512, shape: SCOOP_CHOCOLATE, mergeScore: 8 },
+  { level: 2, name: '쿠키앤크림 스쿱', family: 'scoop', src: S.cookiesCream, width: 146, aspect: 446 / 512, shape: SCOOP_COOKIES, mergeScore: 15 },
+  { level: 3, name: '블루 스쿱', family: 'scoop', src: S.blue, width: 161, aspect: 453 / 512, shape: SCOOP_BLUE, mergeScore: 25 },
+  { level: 4, name: '피스타치오 스쿱', family: 'scoop', src: S.pistachio, width: 178, aspect: 443 / 512, shape: SCOOP_PISTACHIO, mergeScore: 40 },
+  { level: 5, name: '딸기 콘', family: 'cone', src: I.coneStrawberry, width: 186, aspect: 895 / 700, shape: CONE_STRAWBERRY, mergeScore: 70 },
+  { level: 6, name: '민트 콘', family: 'cone', src: I.coneMint, width: 204, aspect: 871 / 700, shape: CONE_MINT, mergeScore: 110 },
+  { level: 7, name: '망고 콘', family: 'cone', src: I.coneMango, width: 222, aspect: 919 / 700, shape: CONE_MANGO, mergeScore: 170 },
+  { level: 8, name: 'BR 컵', family: 'cup', src: I.cupRainbow, width: 246, aspect: 929 / 700, shape: CUP_RAINBOW, mergeScore: 270 },
+  { level: 9, name: '선데 컵', family: 'cup', src: I.cupSundae, width: 270, aspect: 1003 / 700, shape: CUP_SUNDAE, mergeScore: 440 },
 ]
 
 export const MAX_LEVEL = LEVELS.length - 1
