@@ -48,6 +48,20 @@ interface Fx {
   text?: string
 }
 
+/** 실제 외곽선 범위 (matter의 bounds는 속도 방향으로 늘어나므로 꼭짓점으로 직접 계산) */
+function extent(b: Matter.Body) {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
+  const parts = b.parts.length > 1 ? b.parts.slice(1) : b.parts
+  for (const p of parts)
+    for (const v of p.vertices) {
+      if (v.x < minX) minX = v.x
+      if (v.x > maxX) maxX = v.x
+      if (v.y < minY) minY = v.y
+      if (v.y > maxY) maxY = v.y
+    }
+  return { minX, maxX, minY, maxY }
+}
+
 /** 비율 좌표 파트 → 월드 좌표 볼록 꼭짓점 목록 (이미지 중심이 cx,cy) */
 function partVertices(l: ScoopLevel, cx: number, cy: number, scale: number) {
   const w = l.width * scale
@@ -234,10 +248,7 @@ export class MergeGame {
       level: b.plugin.level,
       x: b.position.x,
       y: b.position.y,
-      minX: b.bounds.min.x,
-      maxX: b.bounds.max.x,
-      minY: b.bounds.min.y,
-      maxY: b.bounds.max.y,
+      ...extent(b),
     }))
   }
 
@@ -344,9 +355,10 @@ export class MergeGame {
       if (sp > MAX_SPEED) Body.setVelocity(b, { x: (v.x / sp) * MAX_SPEED, y: (v.y / sp) * MAX_SPEED })
       let dx = 0
       let dy = 0
-      if (b.bounds.min.x < left - 2) dx = left - b.bounds.min.x
-      else if (b.bounds.max.x > right + 2) dx = right - b.bounds.max.x
-      if (b.bounds.max.y > floor + 3) dy = floor - b.bounds.max.y
+      const e = extent(b)
+      if (e.minX < left - 2) dx = left - e.minX
+      else if (e.maxX > right + 2) dx = right - e.maxX
+      if (e.maxY > floor + 3) dy = floor - e.maxY
       if (dx || dy) {
         Body.translate(b, { x: dx, y: dy })
         Body.setVelocity(b, { x: dx ? v.x * -0.2 : v.x, y: dy ? Math.min(0, v.y) : v.y })
@@ -360,7 +372,7 @@ export class MergeGame {
     for (const b of this.scoops()) {
       if (b.plugin.merging) continue
       if (this.simTime - b.plugin.bornAt < DANGER_GRACE_MS) continue
-      if (b.bounds.min.y < dangerY) {
+      if (extent(b).minY < dangerY) {
         over = true
         break
       }

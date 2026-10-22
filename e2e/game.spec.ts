@@ -99,7 +99,7 @@ test('같은 단계 2개 → 상위 1개로 병합 + 점수', async ({ page }, i
   const s = await scoops(page)
   expect(s).toHaveLength(1)
   expect(s[0].level).toBe(1)
-  await expect(page.getByTestId('score')).toContainText('8')
+  await expect(page.getByTestId('score')).toContainText('9')
 })
 
 test('더블 머지 보호: 같은 단계 3개 동시 접촉 → 상위 1개 + 남은 1개', async ({ page }, info) => {
@@ -115,7 +115,7 @@ test('더블 머지 보호: 같은 단계 3개 동시 접촉 → 상위 1개 + �
   await page.waitForTimeout(2500)
   const s = (await scoops(page)).map((b) => b.level).sort()
   expect(s).toEqual([1, 2])
-  await expect(page.getByTestId('score')).toContainText('15')
+  await expect(page.getByTestId('score')).toContainText('17')
 })
 
 test('벽/바닥 관통 없음: 빠르게 많이 떨어뜨려도 통 안에 머묾', async ({ page }, info) => {
@@ -198,7 +198,7 @@ test('위험선 위에 쌓이면 자동 종료 → 500점 미달 쿠폰 미획�
     const g = window.__ICG__!.game!
     // 병합을 끄고 큰 단계를 쌓아 반드시 위험선을 넘김
     g.mergeEnabled = false
-    const lv = [9, 9, 8, 8, 7, 7, 6, 6]
+    const lv = [7, 7, 6, 6, 5, 5, 4, 4]
     lv.forEach((l, i) => g.debugSpawn(l, 200 + (i % 3) * 150, -300 - i * 280))
   })
   await expect(page.getByText('게임 종료!')).toBeVisible({ timeout: 15000 })
@@ -239,10 +239,10 @@ test('최고 단계(선데 컵)끼리는 합쳐지지 않고 남음', async ({ p
   await startGame(page)
   await page.evaluate(() => {
     const g = window.__ICG__!.game!
-    g.debugSpawn(9, 200, 560)
-    g.debugSpawn(9, 470, 560)
+    g.debugSpawn(7, 200, 560)
+    g.debugSpawn(7, 470, 560)
   })
   await page.waitForTimeout(2500)
-  expect((await scoops(page)).map((b) => b.level)).toEqual([9, 9])
+  expect((await scoops(page)).map((b) => b.level)).toEqual([7, 7])
   await expect(page.getByTestId('score')).toContainText('0')
 })
